@@ -1,0 +1,34 @@
+/******************************************************************************\
+FILE:           grouping.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Group record preparation:
+- definition of groups
+- assigning participant to group (omitted below)
+- initialization of fixed group record attributes (omitted below)
+- checking group record attributes (omitted below)
+
+See modules/user/grouping/?/grouping.zm for examples.
+
+\******************************************************************************/
+
+
+// Symbolic definition of groups. Empty means this experiment does not define
+// any groups.
+enum TestGroup
+{
+    GRP1,
+    GRP2
+}
+
+// Assigns participant to a group.
+int assign_participant_to_group()
+{
+    // Select a group based on the number of sessions done so far for current
+    // experiment status. Does not look at session status, so all sessions
+    // count, whether finished successfully or not.
+    return select_group_from_num_sessions();
+}

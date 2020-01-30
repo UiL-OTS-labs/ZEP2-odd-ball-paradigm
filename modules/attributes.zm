@@ -1,0 +1,49 @@
+/******************************************************************************\
+FILE:           attributes.zm
+AUTHOR:         ZepMan 1.3.4
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Defines attributes for researcher, participant, experiment, group and session
+records in the database.
+
+Run ZepMan: Script > Define Attributes to import attributes from this file
+into the database (this is also done on-the-fly when running an experiment).
+
+Run ZepMan: Script > Create Module attributes.zm to recreate this file from
+the database.
+
+\******************************************************************************/
+
+
+// Attribute definitions to be used for participant records.
+FieldDefInit[] participant_attribute_defs =
+{
+}
+
+
+// Attribute definitions to be used for session records. Session record
+// attributes serve as experiment script arguments.
+FieldDefInit[] session_attribute_defs =
+{
+}
+
+
+// Attribute definitions to be used for group records. Group record attributes
+// could be used to specify the levels of between-subjects factors.
+FieldDefInit[] group_attribute_defs =
+{
+}
+
+
+// Attribute definitions to be used for experiment records.
+FieldDefInit[] experiment_attribute_defs =
+{
+}
+
+
+// Attribute definitions to be used for researcher records.
+FieldDefInit[] researcher_attribute_defs =
+{
+}

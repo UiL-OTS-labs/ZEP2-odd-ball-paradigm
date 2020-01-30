@@ -1,0 +1,66 @@
+
+
+// Symbolic definition of item type.
+enum ItemType
+{
+    ODD,                    // odd ball
+    COMMON,                 // repeated stimulus
+}
+
+
+// Item table record.
+record TestItem
+{
+    int         id;     // item id
+    ItemType    type;   // item type
+    string      fn;     // stimulus word sound filename
+}
+
+
+// Practice item table.
+//   index: item number
+TestItem[][] prac_items =
+{
+}
+
+void prepare_prac_items()
+{
+    prac_items.size = NUM_PRAC_ITEMS;
+    int i = 0;
+    int j = 0;
+    int id = 1;
+    int rmin = 1;
+    int rmax = NSTIM_PER_ITEM - 1;
+
+    while (j < NUM_PRAC_ITEMS) {
+        i = 0;
+        prac_items[j].size      = NSTIM_PER_ITEM;
+
+        prac_items[j][i].id     = id;
+        prac_items[j][i].type   = ODD;
+        prac_items[j][i].fn     = "oddball.wav";
+        id++;
+        i++;
+
+        while (i < NSTIM_PER_ITEM) {
+            prac_items[j][i].id     = id;
+            prac_items[j][i].type   = COMMON;
+            prac_items[j][i].fn     = "commonball.wav";
+
+            i++;
+            id++;
+        }
+        int swap = random(rmin, rmax);
+        TestItem temp = prac_items[j][swap];
+        prac_items[j][swap] = prac_items[j][0];
+        prac_items[j][0] = temp;
+        j++;
+    }
+}
+
+
+// Test item table.
+//   index: item number
+TestItem[] test_items =
+{
+}

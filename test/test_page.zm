@@ -1,0 +1,179 @@
+
+/******************************************************************************\
+FILE:           test_page.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Provides a page object to show to the participant during test trials.
+It handles presenting the stimulus and recording the participant's response.
+
+
+HISTORY:
+2011-10-25 TV   Created.
+2017-01-09 TV   Adapted for Zep 2.0.
+
+\******************************************************************************/
+
+import std_sound_output_device;
+
+
+// Symbolic definition of possible responses.
+enum TestEvent {
+    RESPONSE_SLEEP  = 0,
+    RESPONSE_AWAKE  = 1,
+}
+
+// Returns a duration with millisecond precision in the range
+// [ISI_MIN_, ISI_SPAN + ISI_JITTER_RANGE)
+// which are defined in defs.zm
+dur jittered_isi()
+{
+    return dur(random(ISI_MIN_MS, ISI_JITTER_RANGE_MS));
+}
+
+
+Page test_page
+{
+    TestItem    item;           // trial control parameters
+
+
+    init()
+    {
+        fill_pattern_color = TEST_PAGE_COLOR;
+    }
+
+
+    on_event:message()
+    {
+        // Process response box message. See setup() below.
+        response.process_hit(message_arg, event_time);
+    }
+
+    SoundPlayback stimulus
+    {
+        // Sound source/producer object.
+        SoundFile clip {}
+
+        on_event:finish()
+        {
+            done(CONTINUE);
+        }
+
+        time play(time t)
+        {
+            abort();
+
+            device = sound_output_device;
+            clip.file = stimuli_dir() + "sounds/" + item.fn;
+
+            start(t);
+
+            return expected_start_time;
+        }
+    }
+
+
+    Response response
+    {
+        void process_hit(int val, time t)
+        {
+            if (val == RESPONSE_SLEEP)
+                toggle_sleeping();
+            else
+                toggle_awake();
+        }
+    }
+
+
+    // Aborts any ongoing activity on this page and signals the initiator
+    // of the trial that we're done.
+    void done(int msgid)
+    {
+        // Just in case; abort presentation if still active.
+        stimulus.abort();
+
+        signal_target(msgid);   // tell caller we're done
+        target = null;
+
+        control.clear_status();
+    }
+
+
+    //==========================================================================
+
+
+    // Performs preparatory work required before using this page.
+    void setup(int ntrials=-1, bool fb=false, bool pr=false)
+    {
+        test_page_overlay.setup(this);
+
+        // Show or hide prompt.
+        test_page_overlay.show_prompt(pr ?
+            "is it a real word?" : "");
+
+        // Enable or disable the progress bar.
+        test_page_overlay.show_progress_bar(ntrials);   // disabled if < 0
+
+        // Enable or disable feedback.
+        test_page_overlay.enable_feedback(fb);          // disabled if false
+
+
+        // Enable response box buttons and fallback keyboard keys.
+        control.target = this;
+        control.disable_buttons();
+        control.disable_keys();
+        control.enable_button(BUTTON_0, RESPONSE_SLEEP);
+        control.enable_button(BUTTON_1, RESPONSE_AWAKE);
+        control.enable_key(KEY_Shift_L, RESPONSE_SLEEP);
+        control.enable_key(KEY_Shift_R, RESPONSE_AWAKE);
+    }
+
+
+    // Performs cleaning up if necessary.
+    void cleanup()
+    {
+        test_page_overlay.cleanup();
+
+        control.disable_buttons();
+        control.disable_keys();
+        control.target = null;
+    }
+
+
+    // Starts a trial.
+    void action(Object caller, TestItem it, time tref, int count=-1)
+    {
+        // Save the passed trial control parameters.
+        item = it;
+
+
+        // Show this page (if not yet done) and make tref the trial start time.
+        tref = test_window1.show_test_page(this, tref + jittered_isi());
+
+
+        // Start stimulus at fixation offset.
+        time stimonset = stimulus.play(tref);
+
+
+        // Response interval starts at stimulus onset. Timeout after
+        // RESPONSE_DURATION unless this duration is 0s or less.
+        response.start(stimonset, RESPONSE_DURATION);
+
+
+        // Update progress counter (if enabled).
+        test_page_overlay.update_progress_bar(count);
+
+
+        // Update status line on control window. Cleared in done() above.
+        control.set_status(
+            string(item.id) + "  " +
+            string(item.type) + "  " +
+            string(item.fn));
+
+
+        // Remember who to signal when the trial is over.
+        target = caller;
+    }
+}

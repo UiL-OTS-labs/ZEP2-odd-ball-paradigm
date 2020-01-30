@@ -1,0 +1,6 @@
+
+# database folder
+/db/
+
+# vim temporaries
+*.sw[op]
