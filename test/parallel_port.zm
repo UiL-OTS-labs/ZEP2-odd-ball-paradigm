@@ -1,0 +1,21 @@
+
+
+plugin zep_iospp;
+import io_spp_settings;
+
+SPP parport
+{
+    on_event:init()
+    {
+        open(IO_SPP_PORT_NUMBER);
+        data_is_output = true;
+        data_output_mask = 0xFF;
+        if (!is_open)
+            terminate "Unable to open parallel port";
+    }
+
+    void send_pulse(int code, time t, dur duration= 5ms)
+    {
+        start_data(code, 0, t, duration);
+    }
+}

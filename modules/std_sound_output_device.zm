@@ -1,0 +1,33 @@
+/******************************************************************************\
+FILE:           std_sound_output_device.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Provides a sound output device object. The device will be opened at
+initialization time.
+
+HISTORY:
+2017-01-01 TV   Initial version for Zep 2.0
+
+\******************************************************************************/
+
+
+plugin zep_sound;
+
+import sound_settings;
+
+
+SoundPlaybackDevice sound_output_device
+{
+    dur XONAR_D2_LAT = 3.3ms;
+
+    init()
+    {
+        open(PLAYBACK_NUM_CHANNELS, PLAYBACK_SAMPLE_RATE, -1, XONAR_D2_LAT);
+        if (error()) terminate;
+
+        hardware_latency = XONAR_D2_LAT;
+    }
+}

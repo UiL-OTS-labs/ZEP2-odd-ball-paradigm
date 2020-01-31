@@ -1,0 +1,19 @@
+/******************************************************************************\
+FILE:           io_spp_settings.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Defines default SPP port number.
+
+\******************************************************************************/
+
+
+// Parallel port number.
+// Linux: See /dev/parport<num>.
+// Windows: See Device Manager -> Ports, open properties for target device
+// and under Resources take the first address listed. Then define environment
+// variable ZEP_IOSPP_ADDR_<num> to contain the port address in decimal or
+// hexadecimal (prefix with 0x).
+const int       IO_SPP_PORT_NUMBER              = 0;
