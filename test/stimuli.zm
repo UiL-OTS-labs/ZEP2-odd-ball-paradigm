@@ -23,6 +23,12 @@ TestItem[][] prac_items =
 {
 }
 
+// Test item table.
+//   index: item number
+TestItem[][] test_items =
+{
+}
+
 void prepare_prac_items()
 {
     prac_items.size = NUM_PRAC_ITEMS;
@@ -58,9 +64,9 @@ void prepare_prac_items()
     }
 }
 
-
-// Test item table.
-//   index: item number
-TestItem[] test_items =
+void prepare_test_items()
 {
+    // generalize generate prac items.
 }
+
+

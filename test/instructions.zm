@@ -1,0 +1,20 @@
+
+// Add some useful instructions here.
+const string PRAC_INSTRUCTION = "<b>Dear participant,</b>\n"
+                "\n"
+                "Thank you for participating in this experiment.\n"
+                "\n"
+                "\n"
+                "First we will do a short practice.\n"
+                "\n"
+                "<i>Hit any button on the button-box when ready to start.</i>"
+                ;
+
+const string TEST_INSTRUCTION = "End of the practice part.\n"
+                "\n"
+                "If you have any questions at this moment please ask the "
+                "experimenter now.\n"
+                "\n"
+                "<i>Hit any button on the button-box when ready to "
+                "proceed.</i>"
+                ;
