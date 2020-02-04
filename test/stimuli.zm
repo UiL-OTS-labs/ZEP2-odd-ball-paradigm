@@ -14,6 +14,7 @@ record TestItem
     int         id;     // item id
     ItemType    type;   // item type
     string      fn;     // stimulus word sound filename
+    int         marker; // Eeg marker
 }
 
 
@@ -29,44 +30,56 @@ TestItem[][] test_items =
 {
 }
 
-void prepare_prac_items()
+void prepare_items(
+    TestItem[][]    items,
+    int             num_sequences,
+    int             sequence_length
+    )
 {
-    prac_items.size = NUM_PRAC_ITEMS;
+    items.size = num_sequences;
     int i = 0;
     int j = 0;
     int id = 1;
     int rmin = 1;
-    int rmax = NSTIM_PER_ITEM - 1;
+    int rmax = sequence_length - 1;
 
-    while (j < NUM_PRAC_ITEMS) {
+    while (j < num_sequences) {
         i = 0;
-        prac_items[j].size      = NSTIM_PER_ITEM;
+        items[j].size      = sequence_length;
 
-        prac_items[j][i].id     = id;
-        prac_items[j][i].type   = ODD;
-        prac_items[j][i].fn     = "oddball.wav";
+        items[j][i].id     = id;
+        items[j][i].type   = ODD;
+        items[j][i].fn     = "oddball.wav";
+        items[j][i].marker = MARKER_ODD;
         id++;
         i++;
 
-        while (i < NSTIM_PER_ITEM) {
-            prac_items[j][i].id     = id;
-            prac_items[j][i].type   = COMMON;
-            prac_items[j][i].fn     = "commonball.wav";
+        while (i < sequence_length) {
+            items[j][i].id     = id;
+            items[j][i].type   = COMMON;
+            items[j][i].fn     = "commonball.wav";
+            items[j][i].marker = MARKER_COMMON;
 
             i++;
             id++;
         }
         int swap = random(rmin, rmax);
-        TestItem temp = prac_items[j][swap];
-        prac_items[j][swap] = prac_items[j][0];
-        prac_items[j][0] = temp;
+        TestItem temp = items[j][swap];
+        items[j][swap] = items[j][0];
+        items[j][0] = temp;
         j++;
     }
 }
 
+
+void prepare_prac_items()
+{
+    prepare_items(prac_items, NUM_PRAC_SEQUENCES, NSTIM_PER_SEQUENCE);
+}
+
 void prepare_test_items()
 {
-    // generalize generate prac items.
+    prepare_items(test_items, NUM_TEST_SEQUENCES, NSTIM_PER_SEQUENCE);
 }
 
 

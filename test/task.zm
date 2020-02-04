@@ -46,7 +46,7 @@ Block task
             pause_page.set_text(PRAC_INSTRUCTION, true);
 
             pause_page.action(this);
-            control.enable_all_buttons();
+            control.enable_all_buttons(1);
         }
     }
 
@@ -123,7 +123,7 @@ Block task
             prepare_test_items();
             num_cycles = test_items.size;
             // Prepare test page: progress bar, feedback and prompt enabled.
-            test_page.setup(num_cycles, false, false);
+            test_page.setup(-1, false, false);
         }
 
 

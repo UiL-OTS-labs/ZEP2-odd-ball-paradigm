@@ -20,12 +20,6 @@ import std_sound_output_device;
 import parallel_port;
 
 
-// Symbolic definition of possible responses.
-enum TestEvent {
-    RESPONSE_SLEEP  = 0,
-    RESPONSE_AWAKE  = 1,
-}
-
 // Returns a duration with millisecond precision in the range
 // [ISI_MIN_, ISI_SPAN + ISI_JITTER_RANGE)
 // which are defined in defs.zm
@@ -45,22 +39,51 @@ Page test_page
         fill_pattern_color = TEST_PAGE_COLOR;
     }
 
-
-    on_event:message()
+    message()
     {
         // Process response box message. See setup() below.
         response.process_hit(message_arg, event_time);
+    }
+
+    VerticalLayout layout {
+
+        init()
+        {
+            fill_pattern_color = TEST_PAGE_COLOR;
+            is_visible = true;
+            size = 0, 0;
+        }
+
+        CanvasGadget canvas
+        {
+            init()
+            {
+                size = 200, 200;
+                is_visible = true;
+                fill_pattern_color = TEST_PAGE_COLOR;
+                offset_x = width/2;
+                offset_y = height/2;
+            }
+
+            CrossShape fix
+            {
+                init()
+                {
+                    is_visible = true;
+                    line_pattern_color = color:black;
+                    line_width = 5;
+                    x = 0;
+                    y = 0;
+                    radius = 50;
+                }
+            }
+        }
     }
 
     SoundPlayback stimulus
     {
         // Sound source/producer object.
         SoundFile clip {}
-
-        on_event:finish()
-        {
-            done(CONTINUE);
-        }
 
         time play(time t)
         {
@@ -75,15 +98,34 @@ Page test_page
         }
     }
 
-
     Response response
     {
+        int value = -1;
+        int correctness = 0;
+
+        finish()
+        {
+            if (item.type == COMMON)
+                correctness = value == -1;
+            else
+                correctness = value != -1;
+            test_page_overlay.start_feedback(this, correctness, FEEDBACK_DUR);
+            
+            done(CONTINUE);
+        }
+
+        void clear ()
+        {
+            value = -1;
+            correctness = 0;
+        }
+
         void process_hit(int val, time t)
         {
-            if (val == RESPONSE_SLEEP)
-                toggle_sleeping();
-            else
-                toggle_awake();
+            HitType h = hit(t);
+            if (h == HIT_VALID)
+                value = val;
+            ignore_remaining_hits();
         }
     }
 
@@ -99,6 +141,8 @@ Page test_page
         target = null;
 
         control.clear_status();
+
+        response.clear();
     }
 
 
@@ -123,12 +167,8 @@ Page test_page
 
         // Enable response box buttons and fallback keyboard keys.
         control.target = this;
-        control.disable_buttons();
-        control.disable_keys();
-        control.enable_button(BUTTON_0, RESPONSE_SLEEP);
-        control.enable_button(BUTTON_1, RESPONSE_AWAKE);
-        control.enable_key(KEY_Shift_L, RESPONSE_SLEEP);
-        control.enable_key(KEY_Shift_R, RESPONSE_AWAKE);
+        control.enable_all_buttons(1);
+        control.enable_key(' ', 1);
     }
 
 
