@@ -41,7 +41,7 @@ void prepare_items(
     int j = 0;
     int id = 1;
     int rmin = 1;
-    int rmax = sequence_length - 1;
+    int rmax = sequence_length - 2;
 
     while (j < num_sequences) {
         i = 0;
@@ -67,6 +67,8 @@ void prepare_items(
         TestItem temp = items[j][swap];
         items[j][swap] = items[j][0];
         items[j][0] = temp;
+        // Optionally give a special marker to the stimulus after the oddball
+        // here.
         j++;
     }
 }
