@@ -54,7 +54,7 @@ Block task
     Block practice
     {
         TestItem[]        item_block;   // current items
-
+        int n;
 
         on_event:entry()
         {
@@ -63,7 +63,6 @@ Block task
             // Prepare test page: progress bar, feedback and prompt enabled.
             test_page.setup(num_cycles, false, false);
         }
-
 
         on_event:exit()
         {
@@ -85,8 +84,22 @@ Block task
                 on_event:entry()
                 {
                     item = prac_items[practice.cycle][practice_tones.cycle];
-
                     test_page.action(this, item, reference_time, practice.cycle);
+                    n++;
+                }
+
+                on_event:exit()
+                {
+                    TestOutput output;
+                    output.stim_num = n;
+                    output.id       = item.id;
+                    output.type     = item.type;
+                    output.fn       = item.fn;
+                    output.marker   = item.marker;
+                    output.response = test_page.response.value;
+                    output.correct  = test_page.response.correctness;
+
+                    prac_output_append(output);
                 }
             }
         }
@@ -116,6 +129,7 @@ Block task
     Block test
     {
         TestItem[]        item_block;   // current items
+        int n;
 
 
         on_event:entry()
@@ -147,8 +161,22 @@ Block task
                 on_event:entry()
                 {
                     item = test_items[test.cycle][test_tones.cycle];
-
                     test_page.action(this, item, reference_time, test.cycle);
+                    n++;
+                }
+
+                on_event:exit()
+                {
+                    TestOutput output;
+                    output.stim_num = n;
+                    output.id       = item.id;
+                    output.type     = item.type;
+                    output.fn       = item.fn;
+                    output.marker   = item.marker;
+                    output.response = test_page.response.value;
+                    output.correct  = test_page.response.correctness;
+
+                    test_output_append(output);
                 }
             }
         }

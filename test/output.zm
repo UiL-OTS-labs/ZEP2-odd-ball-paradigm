@@ -1,33 +1,13 @@
 
-enum SleepState {
-    AWAKE,
-    SLEEPING
-}
-
-SleepState g_sleepstate = AWAKE;
-
-void toggle_sleeping()
-{
-    g_sleepstate = SLEEPING;
-}
-
-void toggle_awake()
-{
-    g_sleepstate = AWAKE;
-}
-
-SleepState sleep_state()
-{
-    return g_sleepstate;
-}
-
 record TestOutput
 {
     int         stim_num;
     int         id;
     ItemType    type;
     string      fn;
-    SleepState  state;
+    int         marker;
+    int         response;
+    bool        correct;
 }
 
 void prac_output_append(TestOutput out)
@@ -44,11 +24,45 @@ void prac_output_append(TestOutput out)
     expdb.set_trial_data_enum_field(
             "type", string(out.type), "Stimulus type"
             );
+    expdb.set_trial_data_int_field(
+            "marker", out.marker, "Marker"
+            );
     expdb.set_trial_data_string_field(
             "stimulus_file", out.fn, "Played stimulus file"
             );
+    expdb.set_trial_data_int_field(
+            "response", out.response, "Response"
+            );
+    expdb.set_trial_data_bool_field(
+            "correct", out.correct, "Correct"
+            );
+}
+
+void test_output_append(TestOutput out)
+{
+    expdb.add_trial_data_record(
+            namespace_name, "2", "Test results"
+            );
+    expdb.set_trial_data_int_field(
+            "stimulus_number", out.stim_num, "Stimulus number"
+            );
+    expdb.set_trial_data_int_field(
+            "id", out.id, "Stimulus id"
+            );
     expdb.set_trial_data_enum_field(
-            "sleep_state", string(out.state), "Sleeping/awake"
+            "type", string(out.type), "Stimulus type"
+            );
+    expdb.set_trial_data_int_field(
+            "marker", out.marker, "Marker"
+            );
+    expdb.set_trial_data_string_field(
+            "stimulus_file", out.fn, "Played stimulus file"
+            );
+    expdb.set_trial_data_int_field(
+            "response", out.response, "Response"
+            );
+    expdb.set_trial_data_bool_field(
+            "correct", out.correct, "Correct"
             );
 }
 
