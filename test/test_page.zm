@@ -141,8 +141,6 @@ Page test_page
         target = null;
 
         control.clear_status();
-
-        response.clear();
     }
 
 
@@ -197,11 +195,12 @@ Page test_page
         // Start stimulus at fixation offset.
         time stimonset = stimulus.play(tref);
 
-        parport.send_pulse(255, stimonset);
+        parport.send_pulse(item.marker, stimonset);
 
 
         // Response interval starts at stimulus onset. Timeout after
         // RESPONSE_DURATION unless this duration is 0s or less.
+        response.clear();
         response.start(stimonset, RESPONSE_DURATION);
 
 
