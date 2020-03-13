@@ -97,6 +97,7 @@ Block task
                     output.fn       = item.fn;
                     output.marker   = item.marker;
                     output.response = test_page.response.value;
+                    output.resp_type= test_page.response.resp;
                     output.correct  = test_page.response.correctness;
 
                     prac_output_append(output);
@@ -174,6 +175,7 @@ Block task
                     output.fn       = item.fn;
                     output.marker   = item.marker;
                     output.response = test_page.response.value;
+                    output.resp_type= test_page.response.resp;
                     output.correct  = test_page.response.correctness;
 
                     test_output_append(output);

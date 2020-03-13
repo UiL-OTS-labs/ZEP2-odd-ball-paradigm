@@ -102,13 +102,30 @@ Page test_page
     {
         int value = -1;
         int correctness = 0;
+        RespType resp;
 
         finish()
         {
-            if (item.type == COMMON)
-                correctness = value == -1;
-            else
-                correctness = value != -1;
+            if (item.type == ODD) {
+                if (value == 1) {
+                    correctness = 1;
+                    resp = RESP_HIT;
+                }
+                else {
+                    correctness = 0;
+                    resp = RESP_OMISSION;
+                }
+            }
+            else {
+                if (value == 1) {
+                    correctness = 0;
+                    resp = RESP_FALSE_ALARM;
+                }
+                else {
+                    correctness = 1;
+                    resp = RESP_MISS;
+                }
+            }
             test_page_overlay.start_feedback(this, correctness, FEEDBACK_DUR);
             
             done(CONTINUE);
@@ -118,6 +135,7 @@ Page test_page
         {
             value = -1;
             correctness = 0;
+            resp = RESP_NOT_DETERMINED;
         }
 
         void process_hit(int val, time t)

@@ -1,4 +1,12 @@
 
+enum RespType {
+    RESP_NOT_DETERMINED,
+    RESP_HIT,
+    RESP_MISS,
+    RESP_OMISSION,
+    RESP_FALSE_ALARM
+};
+
 record TestOutput
 {
     int         stim_num;
@@ -7,8 +15,9 @@ record TestOutput
     string      fn;
     int         marker;
     int         response;
+    RespType    resp_type;
     bool        correct;
-}
+};
 
 void prac_output_append(TestOutput out)
 {
@@ -32,6 +41,9 @@ void prac_output_append(TestOutput out)
             );
     expdb.set_trial_data_int_field(
             "response", out.response, "Response"
+            );
+    expdb.set_trial_data_enum_field(
+            "resp_type", string(out.resp_type), "Response type"
             );
     expdb.set_trial_data_bool_field(
             "correct", out.correct, "Correct"
@@ -60,6 +72,9 @@ void test_output_append(TestOutput out)
             );
     expdb.set_trial_data_int_field(
             "response", out.response, "Response"
+            );
+    expdb.set_trial_data_enum_field(
+            "resp_type", string(out.resp_type), "Response type"
             );
     expdb.set_trial_data_bool_field(
             "correct", out.correct, "Correct"
