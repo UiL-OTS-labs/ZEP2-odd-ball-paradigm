@@ -2,5 +2,9 @@
 # database folder
 /db/
 
+# output files
+/*.csv
+
 # vim temporaries
 *.sw[op]
+
