@@ -25,7 +25,7 @@ SoundPlaybackDevice sound_output_device
 
     init()
     {
-        open(PLAYBACK_NUM_CHANNELS, PLAYBACK_SAMPLE_RATE, -1, XONAR_D2_LAT);
+        open(PLAYBACK_NUM_CHANNELS, PLAYBACK_SAMPLE_RATE, 3);
         if (error()) terminate;
 
         hardware_latency = XONAR_D2_LAT;
